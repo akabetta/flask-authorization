@@ -17,8 +17,6 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-
-##CREATE TABLE IN DB
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
@@ -69,15 +67,12 @@ def login():
         password = request.form.get('password')
     
         user = User.query.filter_by(email=email).first()
-        #Email doesn't exist
         if not user:
             flash("That email does not exist, please try again.")
             return redirect(url_for('login'))
-        #Password incorrect
         elif not check_password_hash(user.password, password):
             flash('Password incorrect, please try again.')
             return redirect(url_for('login'))
-        #Email exists and password correct
         else:
             login_user(user)
             return redirect(url_for('secrets'))
